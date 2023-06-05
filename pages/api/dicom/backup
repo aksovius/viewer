@@ -1,0 +1,11 @@
+import fs from 'fs'
+export default function handler(req, res) {
+  
+  fs.readdir(process.env.IMAGE_DIR, (err, files) => {
+    if (err) {
+      return res.status(500).send('Unable to scan directory: ' + err);
+    } 
+    res.send(files);
+  });
+  res.status(200)
+}
