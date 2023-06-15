@@ -3,7 +3,7 @@ import dicomParser from 'dicom-parser';
 import * as cornerstone from 'cornerstone-core';
 import cornerstoneDICOMImageLoader from '@cornerstonejs/dicom-image-loader';
 import cornerstoneWebImageLoader from 'cornerstone-web-image-loader';
-
+import * as cornerstoneNIFTIImageLoader from '@cornerstonejs/nifti-image-loader';
 import { Context } from '../_app';
 
 const DicomViewer = () => {
@@ -15,15 +15,15 @@ const DicomViewer = () => {
     cornerstoneDICOMImageLoader.external.cornerstone = cornerstone;
     cornerstoneDICOMImageLoader.external.dicomParser = dicomParser
     cornerstoneWebImageLoader.external.cornerstone = cornerstone;
+    cornerstoneNIFTIImageLoader.external.cornerstone = cornerstone;
     cornerstone.enable(imageElement.current);
   },[])
   
 
   useEffect(() => {
     if (image) {
-      console.log(image)
       if(image == "no-image.jpg"){
-        loadAndViewImage(`https://${process.env.HOST}/viewer/no-image.jpg`);
+        loadAndViewImage(`https://${process.env.HOST}/viewer/AN_001.nii`);
       } else {
         loadAndViewImage(`https://${process.env.HOST}/viewer/api/dicom/${image}`);
       }
@@ -34,7 +34,7 @@ const DicomViewer = () => {
 
 const loadAndViewImage = (imageUrl) => {
   console.log(imageUrl)
-  if(imageUrl.endsWith('.jpg') || imageUrl.endsWith('.png')|| imageUrl.endsWith('.tif')) {
+  if(imageUrl.endsWith('.jpg') || imageUrl.endsWith('.png')|| imageUrl.endsWith('.nii')) {
     // Handle JPG, PNG, or TIF file
     displayDicomImage(imageUrl);
   }
@@ -59,7 +59,9 @@ const loadAndViewImage = (imageUrl) => {
 }
 
 const displayDicomImage = (imageId) => {
+  console.log('imageId :>> ', imageId)
   cornerstone.loadImage(imageId).then((image) => {
+    console.log('image :>> ', image)
     const viewport = cornerstone.getDefaultViewportForImage(imageElement.current, image);
     cornerstone.displayImage(imageElement.current, image, viewport);
   }).catch((err) => {

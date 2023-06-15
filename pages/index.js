@@ -1,5 +1,6 @@
 import FileManager from "./components/FileManager";
 import dynamic from 'next/dynamic'
+import Navigation from "./components/Navigation";
 const DicomViewer = dynamic(() => import('./components/DicomViewer'), { ssr: false })
 
 export default function Index() {

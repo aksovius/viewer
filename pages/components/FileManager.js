@@ -11,7 +11,6 @@ export default function FileManager({dir = 'smart_health_care',  depth = 0}) {
       // let URL = dir !=='' ? `api/dicom/${dir}` : `api/dicom`
 
       getData(`api/dicom/${dir}`).then(data => {
-        console.log('URL',URL)
         const newData = data.map(item => {
           if (item.includes(".")) {
             return { path: item, isDir: false };
@@ -19,7 +18,6 @@ export default function FileManager({dir = 'smart_health_care',  depth = 0}) {
             return { path: item, isDir: true };
           }
         });
-        console.log(newData)
         setData(newData);
      
       })

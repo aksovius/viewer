@@ -5,16 +5,33 @@ import { Context } from '../_app';
 export default function FolderItem({item, depth, dir}) {
    
     const [open, setOpen] = useState(false);
-    const {setImage} = useContext(Context);
+    const {setImage,  setPath} = useContext(Context);
     const handleClick = (event,item) => {
         event.preventDefault();
-        if (item.path.match(/\.(dcm|jpg|png|tif)$/)) {
+        if (item.path.match(/\.(dcm|jpg|png|nii)$/)) {
             console.log(dir + '/' + item.path)
             setImage(dir + '/' + item.path);
         } else {
             setOpen(!open);
+            navigateTo(item.path)
         }
     }
+
+    const navigateTo = (itemPath) => {
+        setPath((currentPath) => {
+          // Check if the path exists in the current path array
+          const existingIndex = currentPath.indexOf(itemPath);
+      
+          if (existingIndex !== -1) {
+            // If it does, remove all items after it in the path
+            return currentPath.slice(0, existingIndex + 1);
+          } else {
+            // Otherwise, add the new path to the end
+            return [...currentPath, itemPath];
+          }
+        });
+      };
+
   return (
     <>
     <div className='flex select-none'>

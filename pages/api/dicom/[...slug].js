@@ -1,19 +1,19 @@
 import fs from 'fs'
 import path from 'path'
 import {promisify} from 'util'
-import { pipeline } from 'stream';
 const readdirAsync = promisify(fs.readdir);
-const readFileAsync = promisify(fs.readFile);
 const lstatAsync = promisify(fs.lstat);
-const pipelineAsync = promisify(pipeline);
 
 
+export const config = {
+  api: {
+    responseLimit: false,
+  },
+} 
 export default async function (req,res) {
     const subdir = req.query.slug || [];
-    console.log(subdir)
     const sanitizedSubdir = subdir.map((part) => path.normalize(part).replace(/^(\.\.[\/\\])+/, ''));
     const directoryPath = path.join(process.env.IMAGE_DIR, ...sanitizedSubdir);
-    console.log('dir',directoryPath)
     try {
       if((await lstatAsync(directoryPath)).isFile()){
         // Create a read stream from the file
